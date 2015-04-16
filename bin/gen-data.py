@@ -60,6 +60,7 @@ class TincVis:
                           'weight': ed['weight']})
                 self.nodes[ed['from']]['edges'] += 1
                 self.nodes[ed['to']]['edges'] += 1
+                self.nodes[ed['to']]['version'] = int(ed['options'],16)>>24
                 uniqueEdges.append(_hash)
 
             if self.minWeight > int(ed['weight']):
