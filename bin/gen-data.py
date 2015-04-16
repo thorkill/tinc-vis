@@ -52,6 +52,10 @@ class TincVis:
                 cnt += 1
 
         for ed in self.tincinfo.edges:
+            if len(ed.keys()) == 0:
+                print('warning: empty edge found - ignoring...')
+                continue
+
             _hash = self.__computeHash(self.nodes[ed['from']], self.nodes[ed['to']])
             if _hash not in uniqueEdges:
                 e = self.edges.setdefault(ed['from'], [])
