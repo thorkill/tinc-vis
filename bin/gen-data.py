@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import sys
 
 from tinctools import *
 
@@ -16,7 +17,7 @@ class TincVis:
         self.n2id = {}
         self.id2n = {}
 
-        self.minWeight = 1
+        self.minWeight = sys.maxint
         self.maxWeight = 1
 
 
