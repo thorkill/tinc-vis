@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <script type="text/javascript" src="vis/vis.min.js"></script>
+    <script type="text/javascript" src="js/tincvis.js"></script>
+    <link href="vis/vis.css" rel="stylesheet" type="text/css" />
+    <link href="css/tinc-vis.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body onload="reDraw()">
+    <div>
+      <div id="infoz">
+        <div id="options" style="display:block">
+          <p style="display:inline">
+            <label> Scale Edges:</label><input type="checkbox" onchange="toggleScaleEdges()" id="change" checked>
+          </p>
+          <span id="avas" style="display:block">
+            <label>Next update:</label>
+            <p id="time" style="display:inline"></p>
+          </span>
+        </div>
+      </div>
+      <div id="mynetwork"></div>
+      <div id="buttons">
+        <button onclick="refresh()">Update</button>
+      </div>
+    </div>
+  </body>
+</html>
