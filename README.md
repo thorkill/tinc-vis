@@ -6,4 +6,4 @@
    - bin/gen-data.py depends on [tinc-info](https://github.com/exioReed/tinc-info)
 
 ## Usage
-   - bin/gen-data.py -n <netname> -o www/data/nodes.json
+   - bin/gen-data.py -n netname -o www/data/nodes.json
