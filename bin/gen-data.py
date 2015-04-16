@@ -3,6 +3,7 @@
 import argparse
 import json
 import sys
+import time
 
 from tinctools import *
 
@@ -60,8 +61,10 @@ class TincVis:
                           'weight': ed['weight']})
                 self.nodes[ed['from']]['edges'] += 1
                 self.nodes[ed['to']]['edges'] += 1
-                self.nodes[ed['to']]['version'] = int(ed['options'],16)>>24
+
                 uniqueEdges.append(_hash)
+
+            self.nodes[ed['to']]['version'] = int(ed['options'],16)>>24
 
             if self.minWeight > int(ed['weight']):
                 self.minWeight = int(ed['weight'])
@@ -110,8 +113,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-n", "--net", required=True, help="network name")
     parser.add_argument("-o", "--outfile", required=True, help="where to store json file")
-    args = parser.parse_args()
+    parser.add_argument("-f", "--foreground", help="stay in foreground and dump data periodically", action="store_true", default=False)
+    parser.add_argument("-t", "--timeout", help="wait between dumps", default=30)
 
-    tv = TincVis(net=args.net)
-    tv.prepare()
-    tv.writeJSON(outfile=args.outfile)
+    args = parser.parse_args()
+    while True:
+        tv = TincVis(net=args.net)
+        tv.prepare()
+        tv.writeJSON(outfile=args.outfile)
+        if not args.foreground:
+            sys.exit()
+        else:
+            time.sleep(args.timeout)
