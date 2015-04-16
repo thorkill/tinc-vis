@@ -9,11 +9,11 @@ from tinctools import *
 
 class TincVis:
 
-    def __init__(self, net):
+    def __init__(self, net, rundir):
         self.net = net
         self.nodes = {}
         self.edges = {}
-        self.tincinfo = TincInfo.TincInfo(net)
+        self.tincinfo = TincInfo.TincInfo(net,rundir=rundir)
 
         self.n2id = {}
         self.id2n = {}
@@ -115,10 +115,11 @@ if __name__ == '__main__':
     parser.add_argument("-o", "--outfile", required=True, help="where to store json file")
     parser.add_argument("-f", "--foreground", help="stay in foreground and dump data periodically", action="store_true", default=False)
     parser.add_argument("-t", "--timeout", help="wait between dumps", default=30)
+    parser.add_argument("-r", "--rundir", help="location of pid- and socket-files", default="/var/run")
 
     args = parser.parse_args()
     while True:
-        tv = TincVis(net=args.net)
+        tv = TincVis(net=args.net, rundir=args.rundir)
         tv.prepare()
         tv.writeJSON(outfile=args.outfile)
         if not args.foreground:
