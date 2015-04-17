@@ -1,12 +1,13 @@
 
 var dataURL = "data/nodes.json";
+var autorefresh = true;
 var refreshInterval = 60;
 
 var nodes = null;
 var edges = null;
 var network = null;
 var scaleEdge = true;
-
+var refreshTimerID = null;
 
 function loadJSON(path, success, error) {
     var xhr = new XMLHttpRequest();
@@ -59,9 +60,24 @@ function toggleScaleEdges() {
         scaleEdge=true;
 }
 
+function toggleAutoRefresh() {
+    if (autorefresh) {
+        autorefresh=false;
+    } else {
+        autorefresh=true;
+    }
+
+    if (autorefresh) {
+        startTimer(refreshInterval, display);
+    } else {
+        clearInterval(refreshTimerID);
+    }
+
+}
+
 function startTimer(duration, display) {
     var timer = duration, minutes, seconds;
-    setInterval(function () {
+    refreshTimerID = setInterval(function () {
         minutes = parseInt(timer / refreshInterval, 10);
         seconds = parseInt(timer % refreshInterval, 10);
 
@@ -80,7 +96,9 @@ function startTimer(duration, display) {
 function reDraw() {
     loadJSON(dataURL,draw);
     display = document.querySelector('#time');
-    startTimer(refreshInterval, display);
+    if (autorefresh == true) {
+        startTimer(refreshInterval, display);
+    }
 }
 
 function refresh() {
