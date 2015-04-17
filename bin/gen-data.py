@@ -32,7 +32,7 @@ class TincVis:
 
     def prepare(self):
         self.tincinfo.parse_all()
-        uniqueEdges = []
+        uniqueEdges = set()
 
         try:
             del(self.tincinfo.nodes['(broadcast)'])
@@ -52,11 +52,13 @@ class TincVis:
                 cnt += 1
 
         for ed in self.tincinfo.edges:
-            if len(ed.keys()) == 0:
+
+            try:
+                _hash = self.__computeHash(self.nodes[ed['from']], self.nodes[ed['to']])
+            except KeyError:
                 print('warning: empty edge found - ignoring...')
                 continue
 
-            _hash = self.__computeHash(self.nodes[ed['from']], self.nodes[ed['to']])
             if _hash not in uniqueEdges:
                 e = self.edges.setdefault(ed['from'], [])
                 e.append({'source': self.nodes[ed['from']]['id'],
@@ -66,7 +68,7 @@ class TincVis:
                 self.nodes[ed['from']]['edges'] += 1
                 self.nodes[ed['to']]['edges'] += 1
 
-                uniqueEdges.append(_hash)
+                uniqueEdges.add(_hash)
 
             self.nodes[ed['to']]['version'] = int(ed['options'],16)>>24
 

@@ -187,7 +187,8 @@ function draw(jsonData) {
         physics: {
             barnesHut: {
                 gravitationalConstant: -5625,
-                centralGravity: 1.3
+                centralGravity: 1.3,
+                damping: 0.30
             }
         }
     };
