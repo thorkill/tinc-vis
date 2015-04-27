@@ -10,9 +10,10 @@ from pkg_resources import parse_version
 
 import tinctools
 
-if parse_version(tinctools.__version__) >= parse_version('0.2') and \
-    parse_version(tinctools.__version__) < parse_version('0.3'):
-    import tinctools.TincInfo as TincInfo
+if parse_version(tinctools.__version__) >= parse_version('0.3') and \
+    parse_version(tinctools.__version__) < parse_version('0.4'):
+    from tinctools import connection, parse
+    from tinctools.connection import Request
 else:
     raise ImportWarning, "tinctools version: {} not supported".format(tinctools.__version__)
 
@@ -22,8 +23,8 @@ class TincVis:
         self.net = net
         self.nodes = {}
         self.edges = {}
-        self.tincinfo = TincInfo.TincInfo(net,rundir=rundir)
-
+        self.tincctl = connection.Control(net, rundir=rundir, reconn=True)
+        self.tincinfo = parse.TincInfo()
         self.n2id = {}
         self.id2n = {}
 
@@ -39,8 +40,18 @@ class TincVis:
             return "{}-{}".format(target['id'],
                                   source['id'])
 
+    def __parseAll(self):
+        connData = self.tincctl.communicate(Request.DUMP_CONNECTIONS)
+        subnetData = self.tincctl.communicate(Request.DUMP_SUBNETS)
+        nodeData = self.tincctl.communicate(Request.DUMP_NODES)
+        edgeData = self.tincctl.communicate(Request.DUMP_EDGES)
+        self.tincinfo.parse_connections(data=connData)
+        self.tincinfo.parse_networks(data=subnetData)
+        self.tincinfo.parse_nodes(data=nodeData)
+        self.tincinfo.parse_edges(data=edgeData)
+
     def prepare(self):
-        self.tincinfo.parse_all()
+        self.__parseAll()
         uniqueEdges = set()
 
         try:
