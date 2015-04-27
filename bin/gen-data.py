@@ -5,7 +5,8 @@ import json
 import sys
 import time
 
-from tinctools import *
+from tinctools import connection, parse
+from tinctools.connection import Request
 
 class TincVis:
 
@@ -13,8 +14,8 @@ class TincVis:
         self.net = net
         self.nodes = {}
         self.edges = {}
-        self.tincinfo = TincInfo.TincInfo(net,rundir=rundir)
-
+        self.tincctl = connection.Control(net, rundir=rundir, reconn=True)
+        self.tincinfo = parse.TincInfo()
         self.n2id = {}
         self.id2n = {}
 
@@ -30,8 +31,18 @@ class TincVis:
             return "{}-{}".format(target['id'],
                                   source['id'])
 
+    def __parseAll(self):
+        connData = self.tincctl.communicate(Request.DUMP_CONNECTIONS)
+        subnetData = self.tincctl.communicate(Request.DUMP_SUBNETS)
+        nodeData = self.tincctl.communicate(Request.DUMP_NODES)
+        edgeData = self.tincctl.communicate(Request.DUMP_EDGES)
+        self.tincinfo.parse_connections(data=connData)
+        self.tincinfo.parse_networks(data=subnetData)
+        self.tincinfo.parse_nodes(data=nodeData)
+        self.tincinfo.parse_edges(data=edgeData)
+
     def prepare(self):
-        self.tincinfo.parse_all()
+        self.__parseAll()
         uniqueEdges = set()
 
         try:
