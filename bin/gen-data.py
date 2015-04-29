@@ -3,9 +3,15 @@
 import argparse
 import json
 import sys
+import socket
 import time
 
-from tinctools import *
+import tinctools
+
+if tinctools.__version__ == 0.2:
+    import tinctools.TincInfo as TincInfo
+else:
+    raise ImportWarning, "tinctools version: {} not supported".format(tinctools.__version__)
 
 class TincVis:
 
@@ -125,9 +131,13 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     while True:
-        tv = TincVis(net=args.net, rundir=args.rundir)
-        tv.prepare()
-        tv.writeJSON(outfile=args.outfile)
+        try:
+            tv = TincVis(net=args.net, rundir=args.rundir)
+            tv.prepare()
+            tv.writeJSON(outfile=args.outfile)
+        except socket.error as e:
+            print(e)
+
         if not args.foreground:
             sys.exit()
         else:
