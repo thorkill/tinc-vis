@@ -6,9 +6,12 @@ import sys
 import socket
 import time
 
+from pkg_resources import parse_version
+
 import tinctools
 
-if tinctools.__version__ == 0.2:
+if parse_version(tinctools.__version__) >= parse_version('0.2') and \
+    parse_version(tinctools.__version__) < parse_version('0.3'):
     import tinctools.TincInfo as TincInfo
 else:
     raise ImportWarning, "tinctools version: {} not supported".format(tinctools.__version__)
