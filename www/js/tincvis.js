@@ -154,6 +154,7 @@ function _updateEdge(old_edge, l) {
     old_edge[0].color = getColor(100-l.frac*100);
     old_edge[0].value = _getEdgeValue(l);
     old_edge[0].title = _getEdgeTitle(l);
+    old_edge[0].style = _getEdgeStyle(l);
     return old_edge;
 }
 
