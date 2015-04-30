@@ -53,6 +53,7 @@ class TincVis:
             node = self.nodes.setdefault(n, {'id': None,
                                              'networks': self.tincinfo.nodes[n].network,
                                              'edges': 0,
+                                             'reachable': nd.peer_info['status_int']>>4 & 1,
                                              'version': 0,
                                              'name': n})
             node['edges'] = 0
@@ -73,6 +74,7 @@ class TincVis:
                 e.append({'source': self.nodes[ed['from']]['id'],
                           'target' : self.nodes[ed['to']]['id'],
                           '_hash': _hash,
+                          'reachable': 1 if self.nodes[ed['from']]['reachable'] == 1 and self.nodes[ed['to']]['reachable'] == 1 else 0,
                           'weight': ed['weight']})
                 self.nodes[ed['from']]['edges'] += 1
                 self.nodes[ed['to']]['edges'] += 1
@@ -104,6 +106,7 @@ class TincVis:
                           "index": self.nodes[n]['id'],
                           "id": self.nodes[n]['id'],
                           "edges": self.nodes[n]['edges'],
+                          "reachable": self.nodes[n]['reachable'],
                           "version": self.nodes[n]['version'],
                           "nets": self.nodes[n]['networks'],
                           "group": 0 if self.nodes[n]['edges'] == 0 else 1})

@@ -133,11 +133,16 @@ function _createNode(n) {
     return {id: n.id,
             label: n.name,
             color: _getNodeColor(n),
-            title: n.name + ' has ' + n.edges + ' edges.<br>Networks: ' + n.nets + '<br>Version: ' + n.version};
+            reachable: n.reachable,
+            title: n.name + ' has ' + n.edges + ' edges.<br>Networks: ' + n.nets + '<br>Version: ' + n.version + '<br>Reachable: ' + n.reachable};
 }
 
 function _getNodeColor(n) {
-    console.log(n);
+
+    if (n.reachable == 0) {
+        return "#FFFF66"
+    }
+
     if (n.version >= 4) {
         return "#009933";
     } else {
@@ -163,10 +168,18 @@ function _getEdgeTitle(l) {
     return l.sname + " with " + l.tname + " (RT: "+l.weight/10+"ms)"
 }
 
+function _getEdgeStyle(l) {
+    if (l.reachable == 0)
+        return 'dash-line';
+    else
+        return 'line';
+}
+
 function _createEdge(l) {
     return {from: l.source,
             to: l.target,
             _hash: l._hash,
+            style: _getEdgeStyle(l),
             color: getColor(100-l.frac*100),
             value: _getEdgeValue(l),
             title: _getEdgeTitle(l)}
@@ -185,6 +198,7 @@ function draw(jsonData) {
                    to: l.target,
                    _hash: l._hash,
                    color: getColor(100-l.frac*100),
+                   style: _getEdgeStyle(l),
                    value: 1/Math.log(l.weight,2),
                    title: l.sname + " with " + l.tname + " (RT: "+l.weight/10+"ms)"});
     });
