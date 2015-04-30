@@ -61,6 +61,7 @@ class TincVis:
 
         cnt = 0
         for n in self.tincinfo.nodes:
+            nd = self.tincinfo.nodes.get(n)
             node = self.nodes.setdefault(n, {'id': None,
                                              'networks': self.tincinfo.nodes[n].network,
                                              'edges': 0,
