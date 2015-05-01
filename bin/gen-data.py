@@ -28,9 +28,7 @@ class TincVis:
         self.n2id = {}
         self.id2n = {}
 
-        self.minWeight = sys.maxint
         self.maxWeight = 1
-
 
     def __computeHash(self, source, target):
         if (int(source['id']) <= int(target['id'])):
@@ -74,7 +72,6 @@ class TincVis:
                 cnt += 1
 
         for ed in self.tincinfo.edges:
-
             try:
                 _hash = self.__computeHash(self.nodes[ed['from']], self.nodes[ed['to']])
             except KeyError:
@@ -94,9 +91,6 @@ class TincVis:
                 uniqueEdges.add(_hash)
 
             self.nodes[ed['to']]['version'] = ed['options']>>24
-
-            if self.minWeight > int(ed['weight']):
-                self.minWeight = int(ed['weight'])
 
             if self.maxWeight < int(ed['weight']):
                 self.maxWeight = int(ed['weight'])
