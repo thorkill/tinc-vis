@@ -152,15 +152,15 @@ function _getNodeColor(n) {
 
 function _updateEdge(old_edge, l) {
     old_edge[0].color = getColor(100-l.frac*100);
-    old_edge[0].value = _getEdgeValue(l);
+    old_edge[0].width = _getEdgeWidth(l);
     old_edge[0].title = _getEdgeTitle(l);
     old_edge[0].style = _getEdgeStyle(l);
     return old_edge;
 }
 
-function _getEdgeValue(l) {
+function _getEdgeWidth(l) {
     if (scaleEdge)
-        return 1/Math.log(l.weight,2);
+        return 7*l.frac;
     else
         return 7;
 }
@@ -180,10 +180,11 @@ function _createEdge(l) {
     return {from: l.source,
             to: l.target,
             _hash: l._hash,
-            style: _getEdgeStyle(l),
             color: getColor(100-l.frac*100),
-            value: _getEdgeValue(l),
-            title: _getEdgeTitle(l)}
+            width: _getEdgeWidth(l),
+            title: _getEdgeTitle(l),
+            style: _getEdgeStyle(l)
+           }
 }
 
 function draw(jsonData) {
@@ -195,13 +196,7 @@ function draw(jsonData) {
     });
 
     jsonData.links.forEach(function (l) {
-        edges.add({from: l.source,
-                   to: l.target,
-                   _hash: l._hash,
-                   color: getColor(100-l.frac*100),
-                   style: _getEdgeStyle(l),
-                   value: 1/Math.log(l.weight,2),
-                   title: l.sname + " with " + l.tname + " (RT: "+l.weight/10+"ms)"});
+        edges.add(_createEdge(l));
     });
 
     var container = document.getElementById('mynetwork');

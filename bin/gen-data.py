@@ -78,13 +78,16 @@ class TincVis:
                 print('warning: empty edge found - ignoring...')
                 continue
 
+            reachable =  1 if self.nodes[ed['from']]['reachable'] == 1 and self.nodes[ed['to']]['reachable'] == 1 else 0
+
             if _hash not in uniqueEdges:
                 e = self.edges.setdefault(ed['from'], [])
                 e.append({'source': self.nodes[ed['from']]['id'],
                           'target' : self.nodes[ed['to']]['id'],
                           '_hash': _hash,
-                          'reachable': 1 if self.nodes[ed['from']]['reachable'] == 1 and self.nodes[ed['to']]['reachable'] == 1 else 0,
+                          'reachable': reachable,
                           'weight': ed['weight']})
+
                 self.nodes[ed['from']]['edges'] += 1
                 self.nodes[ed['to']]['edges'] += 1
 
@@ -92,7 +95,7 @@ class TincVis:
 
             self.nodes[ed['to']]['version'] = ed['options']>>24
 
-            if self.maxWeight < int(ed['weight']):
+            if reachable and self.maxWeight < int(ed['weight']):
                 self.maxWeight = int(ed['weight'])
 
     def getFracWeight(self, cur):
