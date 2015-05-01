@@ -166,7 +166,8 @@ function _getEdgeWidth(l) {
 }
 
 function _getEdgeTitle(l) {
-    return l.sname + " with " + l.tname + " (RT: "+l.weight/10+"ms)"
+    var out = l.reachable == 0 ? "unreachable : " : "";
+    return out  + l.sname + " with " + l.tname + " (RT: "+l.weight/10+"ms)";
 }
 
 function _getEdgeStyle(l) {
