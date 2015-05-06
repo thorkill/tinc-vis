@@ -159,8 +159,10 @@ function _updateEdge(old_edge, l) {
 }
 
 function _getEdgeWidth(l) {
-    if (scaleEdge)
-        return 7*l.frac;
+    if (scaleEdge) {
+        var f = 7*l.frac;
+        return (f > 7) ? 7 : f;
+    }
     else
         return 7;
 }
